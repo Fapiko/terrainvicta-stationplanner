@@ -11,14 +11,10 @@ import {
     Switch,
 } from '@mui/material';
 import Hab from './Hab/Hab';
-import modulesJson from '../../data/TIHabModuleTemplate.json';
+import habsJson from '../../data/TIHabModuleTemplate.json';
 import {useState} from 'react';
 
-function createHab(hab) {
-    return <Hab key={hab.dataName} hab={hab}/>;
-}
-
-const buildableHabs = modulesJson.filter(module => !module.alienModule &&
+const buildableHabs = habsJson.filter(module => !module.alienModule &&
     !module.destroyed &&
     !module.coreModule);
 
@@ -34,6 +30,7 @@ const Habs = (props) => {
     const [researchFilter, setResearchFilter]                 = useState(true);
     const [moneyIncomeFilter, setMoneyIncomeFilter]           = useState(true);
     const [opsIncomeFilter, setOpsIncomeFilter]               = useState(true);
+    const [mcIncomeFilter, setMcIncomeFilter]                 = useState(true);
     const [influenceIncomeFilter, setInfluenceIncomeFilter]   = useState(true);
     const [antimatterIncomeFilter, setAntimatterIncomeFilter] = useState(true);
 
@@ -81,6 +78,10 @@ const Habs = (props) => {
         setInfluenceIncomeFilter(e.target.checked);
     }
 
+    const mcIncomeFilterClickedHandler = (e) => {
+        setMcIncomeFilter(e.target.checked);
+    }
+
     const filters = {
         power:      powerFilter,
         farms:      farmsFilter,
@@ -93,12 +94,11 @@ const Habs = (props) => {
         ops:        opsIncomeFilter,
         influence:  influenceIncomeFilter,
         antimatter: antimatterIncomeFilter,
+        mc:         mcIncomeFilter,
     }
 
     const toggleAllFiltersClickedHandler = (e) => {
         const value = e.target.value === 'true';
-
-        console.log(value);
 
         setPowerFilter(value);
         setFarmsFilter(value);
@@ -110,6 +110,11 @@ const Habs = (props) => {
         setOpsIncomeFilter(value);
         setInfluenceIncomeFilter(value);
         setAntimatterIncomeFilter(value);
+        setMcIncomeFilter(value);
+    }
+
+    function createHab(hab) {
+        return <Hab draggable key={hab.dataName} hab={hab}/>;
     }
 
     const filterModules = (habs, filters) => {
@@ -149,6 +154,10 @@ const Habs = (props) => {
                 }
 
                 if (filters.influence && hab.incomeInfluence_month > 0) {
+                    habTypeFound = true;
+                }
+
+                if (filters.mc && hab.missionControl > 0) {
                     habTypeFound = true;
                 }
 

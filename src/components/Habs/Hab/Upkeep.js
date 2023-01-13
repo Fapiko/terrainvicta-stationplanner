@@ -10,34 +10,40 @@ const Upkeep = (props) => {
     function getUpkeep(supportMaterialsMonthly) {
         let output = [];
         if (supportMaterialsMonthly.money > 0) {
-            output.push('Money: ' + supportMaterialsMonthly.money);
+            output.push({key: 'money', value: 'Money: ' + supportMaterialsMonthly.money});
         }
 
         if (supportMaterialsMonthly.boost > 0) {
-            output.push('Boost: ' + supportMaterialsMonthly.boost);
+            output.push({key: 'boost', value: 'Boost: ' + supportMaterialsMonthly.boost});
         }
 
         if (supportMaterialsMonthly.water > 0) {
-            output.push('Water: ' + supportMaterialsMonthly.water);
+            output.push({key: 'water', value: 'Water: ' + supportMaterialsMonthly.water});
         }
 
         if (supportMaterialsMonthly.volatiles > 0) {
-            output.push('Volatiles: ' + supportMaterialsMonthly.volatiles);
+            output.push({
+                key:   'volatiles',
+                value: 'Volatiles: ' + supportMaterialsMonthly.volatiles,
+            });
         }
 
         if (supportMaterialsMonthly.metals > 0) {
-            output.push('Metals: ' + supportMaterialsMonthly.metals);
+            output.push({key: 'metals', value: 'Metals: ' + supportMaterialsMonthly.metals});
         }
 
         if (supportMaterialsMonthly.nobleMetals > 0) {
-            output.push('Noble Metals: ' + supportMaterialsMonthly.nobleMetals);
+            output.push({
+                key:   'nobleMetals',
+                value: 'Noble Metals: ' + supportMaterialsMonthly.nobleMetals,
+            });
         }
 
         if (supportMaterialsMonthly.fissiles > 0) {
-            output.push('Fissiles: ' + supportMaterialsMonthly.fissiles);
+            output.push({key: 'fissiles', value: 'Fissiles: ' + supportMaterialsMonthly.fissiles});
         }
 
-        return output.map(item => <li>{item}</li>);
+        return output.map(item => <li key={item.key}>{item.value}</li>);
     }
 
     const upkeep = function () {
