@@ -1,4 +1,12 @@
+import {useState} from 'react';
+
 const Upkeep = (props) => {
+    const [expanded, setExpanded] = useState(false);
+
+    const expensesClickHandler = () => {
+        setExpanded(!expanded);
+    }
+
     function getUpkeep(supportMaterialsMonthly) {
         let output = [];
         if (supportMaterialsMonthly.money > 0) {
@@ -39,13 +47,17 @@ const Upkeep = (props) => {
             return;
         }
 
+        if (!expanded) {
+            return <div onClick={expensesClickHandler}><p>Expenses</p></div>
+        }
+
         return (
-            <>
+            <div onClick={expensesClickHandler}>
                 <p>Upkeep</p>
                 {upkeepList.length > 0 && <ul>
                     {upkeepList}
                 </ul>}
-            </>
+            </div>
         );
     }();
 
