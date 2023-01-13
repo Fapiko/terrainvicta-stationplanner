@@ -1,40 +1,40 @@
 import {useState} from 'react';
 
 const Upkeep = (props) => {
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(true);
 
-    const expensesClickHandler = () => {
+    const upkeepClickHandler = () => {
         setExpanded(!expanded);
     }
 
     function getUpkeep(supportMaterialsMonthly) {
         let output = [];
         if (supportMaterialsMonthly.money > 0) {
-            output.push("Money: " + supportMaterialsMonthly.money);
+            output.push('Money: ' + supportMaterialsMonthly.money);
         }
 
         if (supportMaterialsMonthly.boost > 0) {
-            output.push("Boost: " + supportMaterialsMonthly.boost);
+            output.push('Boost: ' + supportMaterialsMonthly.boost);
         }
 
         if (supportMaterialsMonthly.water > 0) {
-            output.push("Water: " + supportMaterialsMonthly.water);
+            output.push('Water: ' + supportMaterialsMonthly.water);
         }
 
         if (supportMaterialsMonthly.volatiles > 0) {
-            output.push("Volatiles: " + supportMaterialsMonthly.volatiles);
+            output.push('Volatiles: ' + supportMaterialsMonthly.volatiles);
         }
 
         if (supportMaterialsMonthly.metals > 0) {
-            output.push("Metals: " + supportMaterialsMonthly.metals);
+            output.push('Metals: ' + supportMaterialsMonthly.metals);
         }
 
         if (supportMaterialsMonthly.nobleMetals > 0) {
-            output.push("Noble Metals: " + supportMaterialsMonthly.nobleMetals);
+            output.push('Noble Metals: ' + supportMaterialsMonthly.nobleMetals);
         }
 
         if (supportMaterialsMonthly.fissiles > 0) {
-            output.push("Fissiles: " + supportMaterialsMonthly.fissiles);
+            output.push('Fissiles: ' + supportMaterialsMonthly.fissiles);
         }
 
         return output.map(item => <li>{item}</li>);
@@ -48,11 +48,11 @@ const Upkeep = (props) => {
         }
 
         if (!expanded) {
-            return <div onClick={expensesClickHandler}><p>Expenses</p></div>
+            return <div onClick={upkeepClickHandler}><p>Upkeep</p></div>
         }
 
         return (
-            <div onClick={expensesClickHandler}>
+            <div onClick={upkeepClickHandler}>
                 <p>Upkeep</p>
                 {upkeepList.length > 0 && <ul>
                     {upkeepList}
@@ -63,7 +63,7 @@ const Upkeep = (props) => {
 
     return <>
         {upkeep}
-        </>;
+    </>;
 }
 
 export default Upkeep;

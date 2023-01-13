@@ -1,7 +1,7 @@
 import {useState} from 'react';
 
 const Income = (props) => {
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(true);
 
     const incomeClickHandler = () => {
         setExpanded(!expanded);
