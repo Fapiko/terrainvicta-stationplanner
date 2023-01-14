@@ -1,11 +1,14 @@
 import {
+    Alert,
     Box,
+    Button,
     FormControl,
     FormControlLabel,
     Grid,
     InputLabel,
     MenuItem,
     Select,
+    Snackbar,
     Switch,
 } from '@mui/material';
 import {useDispatch, useSelector} from 'react-redux';
@@ -18,9 +21,9 @@ import Summary from './Summary';
 import habsJson from '../../data/TIHabModuleTemplate.json';
 import {useState} from 'react';
 import {BODIES_SOLAR_MULTIPLIER_MAP, EARTH} from '../../constants/spaceBodies';
+import {generateSharingLink, parseSharingLink} from '../../helpers/sharingLink';
 
 function maxHabs(tier) {
-    console.log(tier);
     switch (tier) {
         case 1:
             return 4;
@@ -34,13 +37,31 @@ function maxHabs(tier) {
 }
 
 const Base = (props) => {
-    const draggedItem                           = useSelector(state => state.dnd.item);
-    const draggedItemType                       = useSelector(state => state.dnd.itemType);
-    const dispatch                              = useDispatch();
-    const unsortedHabs                          = useSelector(state => state.base.habs);
-    const habCore                               = useSelector(state => state.base.habCore);
-    const [defensesPowered, setDefensesPowered] = useState(true);
-    const [orbitalBody, setOrbitalBody]         = useState(EARTH);
+    const draggedItem                                         = useSelector(state => state.dnd.item);
+    const draggedItemType                                     = useSelector(state => state.dnd.itemType);
+    const dispatch                                            = useDispatch();
+    const unsortedHabs                                        = useSelector(state => state.base.habs);
+    const habCore                                             = useSelector(state => state.base.habCore);
+    const [defensesPowered, setDefensesPowered]               = useState(true);
+    const [orbitalBody, setOrbitalBody]                       = useState(EARTH);
+    const [loaded, setLoaded]                                 = useState(false);
+    const [showLinkCopiedSnackbar, setShowLinkCopiedSnackbar] = useState(false);
+
+    if (!loaded) {
+        const url = window.location.href;
+        if (url.includes('#share/')) {
+            const sharingLink = url.split('#share/')[1];
+            const sharingObj  = parseSharingLink(sharingLink);
+            dispatch(baseActions.setHabsFromDataNames({habs: sharingObj.habs}));
+            setLoaded(true);
+
+            setOrbitalBody(sharingObj.body);
+            setDefensesPowered(sharingObj.defensesPowered);
+        }
+
+        console.log(window.location.href);
+        // setLoaded(true);
+    }
 
     let coreHabs = habsJson.filter(hab => hab.coreModule === true && !hab.alienModule);
 
@@ -114,6 +135,15 @@ const Base = (props) => {
         setDefensesPowered(e.target.checked);
     }
 
+    const shareHandler = () => {
+        const sharingSlug = generateSharingLink(orbitalBody, habs, defensesPowered);
+        console.log(sharingSlug);
+        const url         = new URL(window.location.href);
+        const sharingLink = url.origin + url.pathname + '#share/' + sharingSlug;
+        navigator.clipboard.writeText(sharingLink);
+        setShowLinkCopiedSnackbar(true);
+    }
+
     return (
         <Box sx={{border: 1, m: 1, p: 1}}
              onDragOver={allowDropHandler}
@@ -122,7 +152,7 @@ const Base = (props) => {
                 <Grid item xs={2}>
                     <h1>Base ({habs.length - 1}/{maxHabs(habs[0].tier)})</h1>
                 </Grid>
-                <Grid item xs={10} sx={{p: 1}}>
+                <Grid item xs={8} sx={{p: 1}}>
                     <FormControl>
                         <InputLabel id="tier-filter-label">Tier</InputLabel>
                         <Select
@@ -147,11 +177,14 @@ const Base = (props) => {
                         >
                             {orbitalBodiesList}
                         </Select>
-                    </FormControl>0
+                    </FormControl>
                     <FormControlLabel control={<Switch checked={filters.defensesPowered}/>}
                                       label={'Space Defenses Powered'}
                                       onChange={defensesPoweredChangeHandler}
                                       labelPlacement="top"/>
+                </Grid>
+                <Grid item xs={2} sx={{p: 1}}>
+                    <Button onClick={shareHandler}>Share</Button>
                 </Grid>
             </Grid>
             <Grid container spacing={1}>
@@ -160,6 +193,15 @@ const Base = (props) => {
             <Summary habs={habs}
                      defensesPowered={filters.defensesPowered}
                      solarMultiplier={BODIES_SOLAR_MULTIPLIER_MAP[orbitalBody]}/>
+            <Snackbar
+                open={showLinkCopiedSnackbar}
+                autoHideDuration={6000}
+                message="Note archived"
+            >
+                <Alert severity="success">
+                    Base link copied to clipboard!
+                </Alert>
+            </Snackbar>
         </Box>
     );
 }

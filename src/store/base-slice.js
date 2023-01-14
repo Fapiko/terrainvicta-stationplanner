@@ -8,6 +8,24 @@ const baseSlice = createSlice({
         habCore: 'ColonyCore',
     },
     reducers:     {
+        setHabsFromDataNames(state, action) {
+            const payloadHabs = action.payload.habs;
+
+            var habs = [];
+            for (const habDataName in payloadHabs) {
+                console.log(habDataName);
+                const numHabs = payloadHabs[habDataName];
+
+                for (let i = 0; i < numHabs; i++) {
+                    const hab = habsJson.find(hab => hab.dataName === habDataName);
+                    habs.push(hab);
+                }
+            }
+
+            console.log(habs);
+
+            state.habs = habs;
+        },
         addHabToBase(state, action) {
             state.habs.push(action.payload.hab);
         },
