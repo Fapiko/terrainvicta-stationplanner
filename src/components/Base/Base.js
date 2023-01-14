@@ -19,6 +19,20 @@ import habsJson from '../../data/TIHabModuleTemplate.json';
 import {useState} from 'react';
 import {BODIES_SOLAR_MULTIPLIER_MAP, EARTH} from '../../constants/spaceBodies';
 
+function maxHabs(tier) {
+    console.log(tier);
+    switch (tier) {
+        case 1:
+            return 4;
+        case 2:
+            return 12;
+        case 3:
+            return 20;
+        default:
+            return 4;
+    }
+}
+
 const Base = (props) => {
     const draggedItem                           = useSelector(state => state.dnd.item);
     const draggedItemType                       = useSelector(state => state.dnd.itemType);
@@ -106,7 +120,7 @@ const Base = (props) => {
              onDrop={onDropHandler}>
             <Grid container spacing={1}>
                 <Grid item xs={2}>
-                    <h1>Base</h1>
+                    <h1>Base ({habs.length - 1}/{maxHabs(habs[0].tier)})</h1>
                 </Grid>
                 <Grid item xs={10} sx={{p: 1}}>
                     <FormControl>
@@ -133,7 +147,7 @@ const Base = (props) => {
                         >
                             {orbitalBodiesList}
                         </Select>
-                    </FormControl>
+                    </FormControl>0
                     <FormControlLabel control={<Switch checked={filters.defensesPowered}/>}
                                       label={'Space Defenses Powered'}
                                       onChange={defensesPoweredChangeHandler}
