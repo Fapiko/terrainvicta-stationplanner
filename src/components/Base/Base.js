@@ -1,4 +1,13 @@
-import {Box, FormControl, Grid, InputLabel, MenuItem, Select} from '@mui/material';
+import {
+    Box,
+    FormControl,
+    FormControlLabel,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Select,
+    Switch,
+} from '@mui/material';
 import {useDispatch, useSelector} from 'react-redux';
 import Hab from '../Habs/Hab/Hab';
 import {v4 as uuidv4} from 'uuid';
@@ -7,13 +16,15 @@ import {ITEM_TYPE_HAB, TARGET_TYPE_BASE} from '../../store/dnd-constants';
 import {baseActions} from '../../store/base-slice';
 import Summary from './Summary';
 import habsJson from '../../data/TIHabModuleTemplate.json';
+import {useState} from 'react';
 
 const Base = (props) => {
-    const draggedItem     = useSelector(state => state.dnd.item);
-    const draggedItemType = useSelector(state => state.dnd.itemType);
-    const dispatch        = useDispatch();
-    const unsortedHabs    = useSelector(state => state.base.habs);
-    const habCore         = useSelector(state => state.base.habCore);
+    const draggedItem                           = useSelector(state => state.dnd.item);
+    const draggedItemType                       = useSelector(state => state.dnd.itemType);
+    const dispatch                              = useDispatch();
+    const unsortedHabs                          = useSelector(state => state.base.habs);
+    const habCore                               = useSelector(state => state.base.habCore);
+    const [defensesPowered, setDefensesPowered] = useState(true);
 
     let coreHabs = habsJson.filter(hab => hab.coreModule === true && !hab.alienModule);
 
@@ -66,15 +77,23 @@ const Base = (props) => {
         return <MenuItem key={hab.dataName} value={hab.dataName}>{hab.friendlyName}</MenuItem>;
     });
 
+    const filters = {
+        defensesPowered: defensesPowered,
+    }
+
+    const defensesPoweredChangeHandler = (e) => {
+        setDefensesPowered(e.target.checked);
+    }
+
     return (
         <Box sx={{border: 1, m: 1, p: 1}}
              onDragOver={allowDropHandler}
              onDrop={onDropHandler}>
             <Grid container spacing={1}>
-                <Grid item xs={3}>
+                <Grid item xs={2}>
                     <h1>Base</h1>
                 </Grid>
-                <Grid item xs={9}>
+                <Grid item xs={10}>
                     <FormControl>
                         <InputLabel id="tier-filter-label">Tier</InputLabel>
                         <Select
@@ -87,12 +106,16 @@ const Base = (props) => {
                             {habCoreList}
                         </Select>
                     </FormControl>
+                    <FormControlLabel control={<Switch checked={filters.defensesPowered}/>}
+                                      label={'Space Defenses Powered'}
+                                      onChange={defensesPoweredChangeHandler}
+                                      labelPlacement="top"/>
                 </Grid>
             </Grid>
             <Grid container spacing={1}>
                 {habsList}
             </Grid>
-            <Summary habs={habs}/>
+            <Summary habs={habs} defensesPowered={filters.defensesPowered}/>
         </Box>
     );
 }

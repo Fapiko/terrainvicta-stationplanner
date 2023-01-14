@@ -28,7 +28,10 @@ const Summary = (props) => {
     let volatiles      = 0;
     props.habs.forEach(hab => {
         crew += hab.crew;
-        power += hab.power;
+
+        if (props.defensesPowered || hab.spaceCombatValue === 0) {
+            power += hab.power;
+        }
         missionControl += hab.missionControl;
         boost -= hab[SUPPORT_MATERIALS].boost;
         water -= hab[SUPPORT_MATERIALS].water;
