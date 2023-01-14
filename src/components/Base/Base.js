@@ -17,6 +17,7 @@ import {baseActions} from '../../store/base-slice';
 import Summary from './Summary';
 import habsJson from '../../data/TIHabModuleTemplate.json';
 import {useState} from 'react';
+import {BODIES_SOLAR_MULTIPLIER_MAP, EARTH} from '../../constants/spaceBodies';
 
 const Base = (props) => {
     const draggedItem                           = useSelector(state => state.dnd.item);
@@ -25,6 +26,7 @@ const Base = (props) => {
     const unsortedHabs                          = useSelector(state => state.base.habs);
     const habCore                               = useSelector(state => state.base.habCore);
     const [defensesPowered, setDefensesPowered] = useState(true);
+    const [orbitalBody, setOrbitalBody]         = useState(EARTH);
 
     let coreHabs = habsJson.filter(hab => hab.coreModule === true && !hab.alienModule);
 
@@ -73,8 +75,21 @@ const Base = (props) => {
         }));
     }
 
+    const orbitalBodyChanged = (e) => {
+        setOrbitalBody(e.target.value);
+    }
+
     const habCoreList = coreHabs.map(hab => {
         return <MenuItem key={hab.dataName} value={hab.dataName}>{hab.friendlyName}</MenuItem>;
+    });
+
+    let orbitalBodies = [];
+    Object.entries(BODIES_SOLAR_MULTIPLIER_MAP).forEach(([key, value]) => {
+        orbitalBodies.push({key: key, value: value});
+    });
+
+    const orbitalBodiesList = orbitalBodies.map(body => {
+        return <MenuItem key={body.key} value={body.key}>{body.key}</MenuItem>;
     });
 
     const filters = {
@@ -93,7 +108,7 @@ const Base = (props) => {
                 <Grid item xs={2}>
                     <h1>Base</h1>
                 </Grid>
-                <Grid item xs={10}>
+                <Grid item xs={10} sx={{p: 1}}>
                     <FormControl>
                         <InputLabel id="tier-filter-label">Tier</InputLabel>
                         <Select
@@ -106,6 +121,19 @@ const Base = (props) => {
                             {habCoreList}
                         </Select>
                     </FormControl>
+                    <FormControl>
+                        <InputLabel id="tier-filter-label">Orbital Body</InputLabel>
+                        <Select
+                            sx={{minWidth: '100px'}}
+                            id="tier-select"
+                            labelId="tier-filter-label"
+                            label={'Orbital Body'}
+                            value={orbitalBody}
+                            onChange={orbitalBodyChanged}
+                        >
+                            {orbitalBodiesList}
+                        </Select>
+                    </FormControl>
                     <FormControlLabel control={<Switch checked={filters.defensesPowered}/>}
                                       label={'Space Defenses Powered'}
                                       onChange={defensesPoweredChangeHandler}
@@ -115,7 +143,9 @@ const Base = (props) => {
             <Grid container spacing={1}>
                 {habsList}
             </Grid>
-            <Summary habs={habs} defensesPowered={filters.defensesPowered}/>
+            <Summary habs={habs}
+                     defensesPowered={filters.defensesPowered}
+                     solarMultiplier={BODIES_SOLAR_MULTIPLIER_MAP[orbitalBody]}/>
         </Box>
     );
 }

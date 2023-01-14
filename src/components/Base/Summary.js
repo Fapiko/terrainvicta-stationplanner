@@ -30,7 +30,11 @@ const Summary = (props) => {
         crew += hab.crew;
 
         if (props.defensesPowered || hab.spaceCombatValue === 0) {
-            power += hab.power;
+            if (hab.specialRules.includes('Solar_Power_Variable_Output')) {
+                power += hab.power * props.solarMultiplier;
+            } else {
+                power += hab.power;
+            }
         }
         missionControl += hab.missionControl;
         boost -= hab[SUPPORT_MATERIALS].boost;
