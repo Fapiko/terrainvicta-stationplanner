@@ -5,6 +5,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './store';
 import {Provider} from 'react-redux';
+import ReactGA from 'react-ga4';
+
+const TRACKING_ID = 'G-RHHDWSYL5Q'; // OUR_TRACKING_ID
+
+ReactGA.initialize(TRACKING_ID);
+ReactGA.send('pageview');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,7 +19,16 @@ root.render(
     </React.StrictMode>,
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+function sendToAnalytics({id, name, value, label}) {
+    ReactGA.event(
+        {
+            eventCategory: 'Web Vitals',
+            eventAction:   name,
+            eventValue:    Math.round(name === 'CLS' ? value * 1000 : value), // values must be
+                                                                              // integers
+            eventLabel:     id, // id unique to current page load
+            nonInteraction: true, // avoids affecting bounce rate
+        });
+}
+
+reportWebVitals(sendToAnalytics);

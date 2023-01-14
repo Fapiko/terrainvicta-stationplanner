@@ -44,6 +44,8 @@ const Summary = (props) => {
         if (hab.specialRules.includes('Farm')) {
             return true;
         }
+
+        return false;
     }).forEach(farm => {
         supportedCrew += farm.specialRulesValue;
     });
