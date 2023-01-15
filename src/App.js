@@ -7,12 +7,14 @@ import '@fontsource/roboto/700.css';
 import Base from './components/Base/Base';
 import store from './store';
 import {Provider} from 'react-redux';
+import Footer from './components/Footer';
 
 function App() {
     return (
         <Provider store={store}>
             <Habs/>
             <Base/>
+            <Footer/>
         </Provider>
     );
 }
