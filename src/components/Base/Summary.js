@@ -59,12 +59,15 @@ const Summary = (props) => {
         supportedCrew += farm.specialRulesValue;
     });
 
-    const unsupportedCrew = Math.max(crew - supportedCrew, 0);
+    // const unsupportedCrew = Math.max(crew - supportedCrew, 0);
 
     // Turns out that farm support applies to overall usage of water/volatiles, not just crew.
     // Keeping this for if/when this is fixed.
     // volatiles -= unsupportedCrew * .029;
     // water -= unsupportedCrew * .029;
+
+    volatiles -= crew * .029;
+    water -= crew * .029;
 
     volatiles = Math.min(volatiles + supportedCrew * .029, 0);
     water     = Math.min(water + supportedCrew * .029, 0);
