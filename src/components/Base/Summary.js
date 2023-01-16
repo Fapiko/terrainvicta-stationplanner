@@ -26,6 +26,7 @@ const Summary = (props) => {
     let crew           = 0;
     let water          = 0;
     let volatiles      = 0;
+    let metals         = 0;
     props.habs.forEach(hab => {
         crew += hab.crew;
 
@@ -40,6 +41,7 @@ const Summary = (props) => {
         boost -= hab[SUPPORT_MATERIALS].boost;
         water -= hab[SUPPORT_MATERIALS].water;
         volatiles -= hab[SUPPORT_MATERIALS].volatiles;
+        metals -= hab[SUPPORT_MATERIALS].metals;
 
         PRODUCTS.forEach(product => {
             products[product] += getGrossIncome(product, hab);
@@ -70,6 +72,7 @@ const Summary = (props) => {
             <li>Money: {products.money}</li>
             <li>Volatiles: {volatiles}</li>
             <li>Water: {water}</li>
+            <li>Metals: {metals}</li>
             <li>Influence: {products.influence}</li>
             <li>Ops: {products.ops}</li>
             <li>Research: {products.research}</li>
