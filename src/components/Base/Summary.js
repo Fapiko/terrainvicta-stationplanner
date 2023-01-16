@@ -76,19 +76,19 @@ const Summary = (props) => {
         <ul>
             <li>Power: {power}</li>
             <li>Crew: {crew} ({supportedCrew})</li>
-            <li>Boost: {boost}</li>
-            <li>Money: {products.money}</li>
-            <li>Volatiles: {volatiles}</li>
-            <li>Water: {water}</li>
-            <li>Metals: {metals}</li>
-            <li>Noble Metals: {products.nobleMetals}</li>
-            <li>Influence: {products.influence}</li>
-            <li>Ops: {products.ops}</li>
-            <li>Research: {products.research}</li>
-            <li>Projects: {products.projects}</li>
-            <li>Mission Control: {missionControl}</li>
-            <li>Fissiles: {products.fissiles}</li>
-            <li>Antimatter: {products.antimatter}</li>
+            {boost !== 0 && <li>Boost: {boost}</li>}
+            {products.money !== 0 && <li>Money: {products.money}</li>}
+            {volatiles !== 0 && <li>Volatiles: {volatiles}</li>}
+            {water !== 0 && <li>Water: {water}</li>}
+            {metals !== 0 && <li>Metals: {metals}</li>}
+            {products.nobleMetals !== 0 && <li>Noble Metals: {products.nobleMetals}</li>}
+            {products.influence !== 0 && <li>Influence: {products.influence}</li>}
+            {products.ops !== 0 && <li>Ops: {products.ops}</li>}
+            {products.research !== 0 && <li>Research: {products.research}</li>}
+            {products.projects !== 0 && <li>Projects: {products.projects}</li>}
+            {missionControl !== 0 && <li>Mission Control: {missionControl}</li>}
+            {products.fissiles !== 0 && <li>Fissiles: {products.fissiles}</li>}
+            {products.antimatter !== 0 && <li>Antimatter: {products.antimatter}</li>}
         </ul>
     )
 }
