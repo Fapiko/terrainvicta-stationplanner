@@ -61,8 +61,13 @@ const Summary = (props) => {
 
     const unsupportedCrew = Math.max(crew - supportedCrew, 0);
 
-    volatiles -= unsupportedCrew * .029;
-    water -= unsupportedCrew * .029;
+    // Turns out that farm support applies to overall usage of water/volatiles, not just crew.
+    // Keeping this for if/when this is fixed.
+    // volatiles -= unsupportedCrew * .029;
+    // water -= unsupportedCrew * .029;
+    
+    volatiles = Math.min(volatiles + supportedCrew * .029, 0);
+    water     = Math.min(volatiles + supportedCrew * .029, 0);
 
     return (
         <ul>
