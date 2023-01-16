@@ -67,7 +67,7 @@ const Summary = (props) => {
     // water -= unsupportedCrew * .029;
 
     volatiles = Math.min(volatiles + supportedCrew * .029, 0);
-    water     = Math.min(volatiles + supportedCrew * .029, 0);
+    water     = Math.min(water + supportedCrew * .029, 0);
 
     return (
         <ul>
