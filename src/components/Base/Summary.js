@@ -65,7 +65,7 @@ const Summary = (props) => {
     // Keeping this for if/when this is fixed.
     // volatiles -= unsupportedCrew * .029;
     // water -= unsupportedCrew * .029;
-    
+
     volatiles = Math.min(volatiles + supportedCrew * .029, 0);
     water     = Math.min(volatiles + supportedCrew * .029, 0);
 
@@ -85,7 +85,6 @@ const Summary = (props) => {
             <li>Mission Control: {missionControl}</li>
             <li>Nobles: {products.nobles}</li>
             <li>Fissiles: {products.fissiles}</li>
-            <li>Exotics: {products.exotics}</li>
             <li>Antimatter: {products.antimatter}</li>
         </ul>
     )
