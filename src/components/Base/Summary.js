@@ -78,12 +78,12 @@ const Summary = (props) => {
             <li>Volatiles: {volatiles}</li>
             <li>Water: {water}</li>
             <li>Metals: {metals}</li>
+            <li>Noble Metals: {products.nobleMetals}</li>
             <li>Influence: {products.influence}</li>
             <li>Ops: {products.ops}</li>
             <li>Research: {products.research}</li>
             <li>Projects: {products.projects}</li>
             <li>Mission Control: {missionControl}</li>
-            <li>Nobles: {products.nobles}</li>
             <li>Fissiles: {products.fissiles}</li>
             <li>Antimatter: {products.antimatter}</li>
         </ul>
