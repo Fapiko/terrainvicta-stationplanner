@@ -1,5 +1,5 @@
 const SharingLink                                          = require('./sharingLink');
-const {getHabsList, generateSharingLink, parseSharingLink} = require('./sharingLink');
+const {getHabsList, generateSharingSlug, parseSharingLink} = require('./sharingLink');
 
 test('populates hab list correctly', () => {
     const habsList = [
@@ -25,7 +25,7 @@ test('correctly base64 encodes sharing link', () => {
     ];
     const defensesPowered = true;
 
-    const sharingLink = generateSharingLink(body, habs, defensesPowered);
+    const sharingLink = generateSharingSlug(body, habs, defensesPowered);
     expect(sharingLink)
         .toEqual(
             'eyJib2R5IjoiRWFydGgiLCJoYWJzIjp7IkZ1c2lvbkNvcmUiOjIsIkZ1c2lvbkFycmF5IjoxfSwiZGVmZW5zZXNQb3dlcmVkIjp0cnVlfQ==');

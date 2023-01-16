@@ -10,6 +10,7 @@ import {
     Select,
     Snackbar,
     Switch,
+    TextField,
 } from '@mui/material';
 import {useDispatch, useSelector} from 'react-redux';
 import Hab from '../Habs/Hab/Hab';
@@ -19,9 +20,14 @@ import {ITEM_TYPE_HAB, TARGET_TYPE_BASE} from '../../store/dnd-constants';
 import {baseActions} from '../../store/base-slice';
 import Summary from './Summary';
 import habsJson from '../../data/TIHabModuleTemplate.json';
-import {useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {BODIES_SOLAR_MULTIPLIER_MAP, EARTH} from '../../constants/spaceBodies';
-import {generateSharingLink, parseSharingLink} from '../../helpers/sharingLink';
+import {
+    generateSharingLink,
+    generateSharingSlug,
+    parseSharingLink,
+} from '../../helpers/sharingLink';
+import {basesActions} from '../../store/bases-slice';
 
 function maxHabs(tier) {
     switch (tier) {
@@ -44,23 +50,39 @@ const Base = (props) => {
     const habCore                                             = useSelector(state => state.base.habCore);
     const [defensesPowered, setDefensesPowered]               = useState(true);
     const [orbitalBody, setOrbitalBody]                       = useState(EARTH);
-    const [loaded, setLoaded]                                 = useState(false);
     const [showLinkCopiedSnackbar, setShowLinkCopiedSnackbar] = useState(false);
+    const [baseName, setBaseName]                             = useState('Base');
+    const [lastLoadedUrl, setLastLoadedUrl]                   = useState('');
 
-    if (!loaded) {
-        const url = window.location.href;
-        if (url.includes('#share/')) {
-            const sharingLink = url.split('#share/')[1];
-            const sharingObj  = parseSharingLink(sharingLink);
-            dispatch(baseActions.setHabsFromDataNames({habs: sharingObj.habs}));
-            setLoaded(true);
+    const url = window.location.href;
 
-            setOrbitalBody(sharingObj.body);
-            setDefensesPowered(sharingObj.defensesPowered);
-        }
+    const loadFromUrl = useCallback(
+        () => {
+            if (url.includes('#share/')) {
+                const sharingLink = url.split('#share/')[1];
+                const sharingObj  = parseSharingLink(sharingLink);
+                dispatch(baseActions.setHabsFromDataNames({habs: sharingObj.habs}));
 
-        console.log(window.location.href);
-        // setLoaded(true);
+                setOrbitalBody(sharingObj.body);
+                setDefensesPowered(sharingObj.defensesPowered);
+                setBaseName(sharingObj.baseName);
+            }
+
+            setLastLoadedUrl(url);
+        },
+        [url, dispatch],
+    );
+
+    useEffect(() => {
+        window.addEventListener('popstate', loadFromUrl);
+
+        return () => {
+            window.removeEventListener('popstate', loadFromUrl);
+        };
+    }, [loadFromUrl]);
+
+    if (url !== lastLoadedUrl) {
+        loadFromUrl();
     }
 
     let coreHabs = habsJson.filter(hab => hab.coreModule === true && !hab.alienModule);
@@ -136,12 +158,31 @@ const Base = (props) => {
     }
 
     const shareHandler = () => {
-        const sharingSlug = generateSharingLink(orbitalBody, habs, defensesPowered);
-        console.log(sharingSlug);
-        const url         = new URL(window.location.href);
-        const sharingLink = url.origin + url.pathname + '#share/' + sharingSlug;
+        const sharingLink = generateSharingLink(baseName, orbitalBody, habs, defensesPowered);
         navigator.clipboard.writeText(sharingLink);
         setShowLinkCopiedSnackbar(true);
+    }
+
+    const clearHandler = () => {
+        dispatch(baseActions.clearHabs());
+    }
+
+    const baseNameChangedHandler = (e) => {
+        setBaseName(e.target.value);
+    }
+
+    const baseNameKeyHandler = (e) => {
+        if (e.key === 'Enter') {
+            baseNameChangedHandler(e);
+        }
+    }
+
+    const saveHandler = () => {
+        const sharingSlug = generateSharingSlug(baseName, orbitalBody, habs, defensesPowered);
+        dispatch(basesActions.addBase({
+            name: baseName,
+            slug: sharingSlug,
+        }));
     }
 
     return (
@@ -149,11 +190,23 @@ const Base = (props) => {
              onDragOver={allowDropHandler}
              onDrop={onDropHandler}>
             <Grid container spacing={1}>
-                <Grid item xs={2}>
-                    <h1>Base ({habs.length - 1}/{maxHabs(habs[0].tier)})</h1>
+                <Grid item xs={6}>
+                    <h1>{baseName} ({habs.length - 1}/{maxHabs(habs[0].tier)})</h1>
                 </Grid>
-                <Grid item xs={8} sx={{p: 1}}>
-                    <FormControl>
+                <Grid item xs={6}>
+                    <TextField label="Base Name"
+                               onBlur={baseNameChangedHandler}
+                               onKeyDown={baseNameKeyHandler}
+                               variant="standard"/>
+                    <Button onClick={clearHandler} sx={{ml: 1}} variant={'outlined'}>Clear
+                        Base</Button>
+                    <Button variant={'outlined'}
+                            sx={{m: 1}}
+                            onClick={shareHandler}>Share</Button>
+                    <Button onClick={saveHandler} variant={'contained'}>Save</Button>
+                </Grid>
+                <Grid item xs={12} sx={{p: 1}}>
+                    <FormControl sx={{p: 1}}>
                         <InputLabel id="tier-filter-label">Tier</InputLabel>
                         <Select
                             id="tier-select"
@@ -165,7 +218,7 @@ const Base = (props) => {
                             {habCoreList}
                         </Select>
                     </FormControl>
-                    <FormControl>
+                    <FormControl sx={{p: 1}}>
                         <InputLabel id="tier-filter-label">Orbital Body</InputLabel>
                         <Select
                             sx={{minWidth: '100px'}}
@@ -182,9 +235,6 @@ const Base = (props) => {
                                       label={'Space Defenses Powered'}
                                       onChange={defensesPoweredChangeHandler}
                                       labelPlacement="top"/>
-                </Grid>
-                <Grid item xs={2} sx={{p: 1}}>
-                    <Button onClick={shareHandler}>Share</Button>
                 </Grid>
             </Grid>
             <Grid container spacing={1}>

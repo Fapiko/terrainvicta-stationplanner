@@ -13,7 +13,6 @@ const baseSlice = createSlice({
 
             var habs = [];
             for (const habDataName in payloadHabs) {
-                console.log(habDataName);
                 const numHabs = payloadHabs[habDataName];
 
                 for (let i = 0; i < numHabs; i++) {
@@ -22,12 +21,13 @@ const baseSlice = createSlice({
                 }
             }
 
-            console.log(habs);
-
             state.habs = habs;
         },
         addHabToBase(state, action) {
             state.habs.push(action.payload.hab);
+        },
+        clearHabs(state, action) {
+            state.habs.splice(1);
         },
         removeHabFromBase(state, action) {
             const index = state.habs.findIndex(hab => hab.dataName === action.payload.hab.dataName);

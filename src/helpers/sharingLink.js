@@ -5,14 +5,21 @@ export function parseSharingLink(link) {
     return JSON.parse(decoded);
 }
 
-export function generateSharingLink(body, habs, defensesPowered) {
+export function generateSharingSlug(baseName, body, habs, defensesPowered) {
     const sharingObj = {
+        baseName:        baseName,
         body:            body,
         habs:            getHabsList(habs),
         defensesPowered: defensesPowered,
     }
 
     return Buffer.from(JSON.stringify(sharingObj)).toString('base64');
+}
+
+export function generateSharingLink(baseName, orbitalBody, habs, defensesPowered) {
+    const sharingSlug = generateSharingSlug(baseName, orbitalBody, habs, defensesPowered);
+    const url         = new URL(window.location.href);
+    return url.origin + url.pathname + '#share/' + sharingSlug;
 }
 
 export function getHabsList(habs) {

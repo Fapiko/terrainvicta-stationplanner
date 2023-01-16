@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import ReactGA from 'react-ga4';
 
-const TRACKING_ID = 'G-RHHDWSYL5Q'; // OUR_TRACKING_ID
+const TRACKING_ID = 'G-RHHDWSYL5Q';
 
 ReactGA.initialize(TRACKING_ID);
 ReactGA.send('pageview');
