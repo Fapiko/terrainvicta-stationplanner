@@ -15,16 +15,25 @@ const baseSlice = createSlice({
             for (const habDataName in payloadHabs) {
                 const numHabs = payloadHabs[habDataName];
 
-                for (let i = 0; i < numHabs; i++) {
-                    const hab = habsJson.find(hab => hab.dataName === habDataName);
-                    habs.push(hab);
-                }
+                const hab = {
+                    ...habsJson.find(hab => hab.dataName === habDataName),
+                    quantity: numHabs
+                };
+                habs.push(hab);
             }
 
             state.habs = habs;
         },
         addHabToBase(state, action) {
-            state.habs.push(action.payload.hab);
+            const existingHab = state.habs.find(hab => hab.dataName ===
+                action.payload.hab.dataName);
+
+            console.log(action.payload);
+            if (existingHab !== undefined) {
+                existingHab.quantity += action.payload.quantity;
+            } else {
+                state.habs.push({...action.payload.hab, quantity: action.payload.quantity});
+            }
         },
         clearHabs(state, action) {
             state.habs.splice(1);
@@ -33,7 +42,12 @@ const baseSlice = createSlice({
             const index = state.habs.findIndex(hab => hab.dataName === action.payload.hab.dataName);
 
             if (index > -1) {
-                state.habs.splice(index, 1);
+                const hab = state.habs[index];
+                if (hab.quantity > 1) {
+                    hab.quantity -= action.payload.quantity;
+                } else {
+                    state.habs.splice(index, 1);
+                }
             }
         },
         updateCore(state, action) {

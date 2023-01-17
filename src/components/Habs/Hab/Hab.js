@@ -5,6 +5,7 @@ import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {dndActions} from '../../../store/dnd-slice';
 import {ITEM_TYPE_HAB} from '../../../store/dnd-constants';
+import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import {baseActions} from '../../../store/base-slice';
 
@@ -25,7 +26,15 @@ const Hab = (props) => {
 
     const removeHandler = () => {
         dispatch(baseActions.removeHabFromBase({
-            hab: props.hab,
+            hab:      props.hab,
+            quantity: 1,
+        }))
+    }
+
+    const addHandler = () => {
+        dispatch(baseActions.addHabToBase({
+            hab:      props.hab,
+            quantity: 1,
         }))
     }
 
@@ -41,9 +50,25 @@ const Hab = (props) => {
         </>);
     }
 
-    let removeButton = <></>;
-    if (props.removable) {
-        removeButton = <IconButton onClick={removeHandler}><RemoveIcon/></IconButton>;
+    let counters = <></>;
+    if (props.countable) {
+        counters = <>
+            <Grid item xs={4}>
+                <IconButton onClick={addHandler}>
+                    <AddIcon/>
+                </IconButton>
+            </Grid>
+            <Grid item xs={4}>
+                <Typography variant={'subtitle2'} style={{textAlign: 'center', lineHeight: '40px'}}>
+                    {hab.quantity}
+                </Typography>
+            </Grid>
+            <Grid item xs={4}>
+                <IconButton onClick={removeHandler}>
+                    <RemoveIcon/>
+                </IconButton>
+            </Grid>
+        </>;
     }
 
     return (
@@ -53,18 +78,14 @@ const Hab = (props) => {
               draggable
               onDragStart={onDragHandler}>
             <Card sx={{p: 1}}>
+                <Typography variant="p" style={{textAlign: 'center'}}
+                            component="div"
+                            onClick={detailsClickHandler}>
+                    {hab.friendlyName}
+                </Typography>
+                {detailItems}
                 <Grid container>
-                    <Grid item xs={10}>
-                        <Typography variant="p"
-                                    component="div"
-                                    onClick={detailsClickHandler}>
-                            {hab.friendlyName}
-                        </Typography>
-                        {detailItems}
-                    </Grid>
-                    <Grid item xs={2}>
-                        {removeButton}
-                    </Grid>
+                    {counters}
                 </Grid>
             </Card>
         </Grid>

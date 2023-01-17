@@ -53,6 +53,7 @@ const Base = (props) => {
     const [showLinkCopiedSnackbar, setShowLinkCopiedSnackbar] = useState(false);
     const [baseName, setBaseName]                             = useState('Base');
     const [lastLoadedUrl, setLastLoadedUrl]                   = useState('');
+    const [typingBaseName, setTypingBaseName]                 = useState(baseName);
 
     const url = window.location.href;
 
@@ -66,6 +67,7 @@ const Base = (props) => {
                 setOrbitalBody(sharingObj.body);
                 setDefensesPowered(sharingObj.defensesPowered);
                 setBaseName(sharingObj.baseName);
+                setTypingBaseName(sharingObj.baseName);
             }
 
             setLastLoadedUrl(url);
@@ -100,12 +102,12 @@ const Base = (props) => {
     });
 
     const habsList = habs.map(hab => {
-        let removable = true;
+        let countable = true;
         if (hab.coreModule) {
-            removable = false;
+            countable = false;
         }
 
-        return <Hab key={uuidv4()} hab={hab} removable={removable}/>;
+        return <Hab key={uuidv4()} hab={hab} countable={countable}/>;
     });
 
     const allowDropHandler = (e) => {
@@ -118,7 +120,8 @@ const Base = (props) => {
         }
 
         dispatch(baseActions.addHabToBase({
-            hab: draggedItem,
+            hab:      {...draggedItem},
+            quantity: 1,
         }));
         dispatch(dndActions.drop({
             item:       props.hab,
@@ -165,6 +168,8 @@ const Base = (props) => {
 
     const clearHandler = () => {
         dispatch(baseActions.clearHabs());
+        setTypingBaseName('New Base');
+        setBaseName('New Base');
     }
 
     const baseNameChangedHandler = (e) => {
@@ -197,6 +202,8 @@ const Base = (props) => {
                     <TextField label="Base Name"
                                onBlur={baseNameChangedHandler}
                                onKeyDown={baseNameKeyHandler}
+                               value={typingBaseName}
+                               onChange={(e) => setTypingBaseName(e.target.value)}
                                variant="standard"/>
                     <Button onClick={clearHandler} sx={{ml: 1}} variant={'outlined'}>Clear
                         Base</Button>

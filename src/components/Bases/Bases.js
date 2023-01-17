@@ -40,11 +40,9 @@ const Bases = (props) => {
             <Typography variant="h6" component="p" sx={{textAlign: 'center'}}>
                 Saved Bases
             </Typography>
-            <nav aria-label="main mailbox folders">
-                <List>
-                    {baseList}
-                </List>
-            </nav>
+            <List>
+                {baseList}
+            </List>
         </Box>
     );
 }
