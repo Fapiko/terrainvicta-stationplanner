@@ -190,13 +190,22 @@ const Base = (props) => {
         }));
     }
 
+    const habCount = habs.reduce((acc, hab) => {
+        console.log(acc);
+        if (hab.coreModule) {
+            return acc;
+        }
+
+        return acc + hab.quantity;
+    }, 0);
+
     return (
         <Box sx={{border: 1, m: 1, p: 1}}
              onDragOver={allowDropHandler}
              onDrop={onDropHandler}>
             <Grid container spacing={1}>
                 <Grid item xs={6}>
-                    <h1>{baseName} ({habs.length - 1}/{maxHabs(habs[0].tier)})</h1>
+                    <h1>{baseName} ({habCount}/{maxHabs(habs[0].tier)})</h1>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField label="Base Name"
