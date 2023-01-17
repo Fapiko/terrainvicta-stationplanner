@@ -93,29 +93,21 @@ const Summary = (props) => {
 
     return (
         <List>
-            <ListItem>
-                <ListItemText primary={`Power: ${power}`}/>
-            </ListItem>
-            <ListItem>
-                <ListItemText primary={`Crew: ${crew} (${supportedCrew})`}/>
-            </ListItem>
+            {Item('Power', power)}
+            {Item('Crew', crew)}
             {Item('Boost', boost)}
             {Item('Money', products.money)}
-            {volatiles !== 0 && <ListItem>Volatiles: {volatiles}</ListItem>}
-            {water !== 0 && <ListItem>Water: {water}</ListItem>}
-            {metals !== 0 && <ListItem>Metals: {metals}</ListItem>}
-            {products.nobleMetals !==
-            0 &&
-            <ListItem>Noble Metals: {products.nobleMetals}</ListItem>}
-            {products.influence !== 0 && <ListItem>Influence: {products.influence}</ListItem>}
-            {products.ops !== 0 && <ListItem>Ops: {products.ops}</ListItem>}
-            {products.research !== 0 && <ListItem>Research: {products.research}</ListItem>}
-            {products.projects !== 0 && <ListItem>Projects: {products.projects}</ListItem>}
-            {missionControl !== 0 && <ListItem>Mission Control: {missionControl}</ListItem>}
-            {products.fissiles !== 0 && <ListItem>Fissiles: {products.fissiles}</ListItem>}
-            {products.antimatter !==
-            0 &&
-            <ListItem>Antimatter: {products.antimatter}</ListItem>}
+            {Item('Volatiles', volatiles)}
+            {Item('Water', water)}
+            {Item('Metals', metals)}
+            {Item('Noble Metals:', products.nobleMetals)}
+            {Item('Influence', products.influence)}
+            {Item('Ops', products.ops)}
+            {Item('Research', products.research)}
+            {Item('Projects', products.projects)}
+            {Item('Mission Control', missionControl)}
+            {Item('Fissiles', products.fissiles)}
+            {Item('Antimatter', products.antimatter)}
         </List>
     )
 }
