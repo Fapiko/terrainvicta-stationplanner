@@ -191,7 +191,6 @@ const Base = (props) => {
     }
 
     const habCount = habs.reduce((acc, hab) => {
-        console.log(acc);
         if (hab.coreModule) {
             return acc;
         }

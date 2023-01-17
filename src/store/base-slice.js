@@ -17,7 +17,7 @@ const baseSlice = createSlice({
 
                 const hab = {
                     ...habsJson.find(hab => hab.dataName === habDataName),
-                    quantity: numHabs
+                    quantity: numHabs,
                 };
                 habs.push(hab);
             }
@@ -28,7 +28,6 @@ const baseSlice = createSlice({
             const existingHab = state.habs.find(hab => hab.dataName ===
                 action.payload.hab.dataName);
 
-            console.log(action.payload);
             if (existingHab !== undefined) {
                 existingHab.quantity += action.payload.quantity;
             } else {
