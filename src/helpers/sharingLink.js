@@ -26,11 +26,7 @@ export function getHabsList(habs) {
     const habsList = {};
 
     habs.forEach(hab => {
-        if (!(hab.dataName in habsList)) {
-            habsList[hab.dataName] = 1;
-        } else {
-            habsList[hab.dataName]++;
-        }
+        habsList[hab.dataName] = hab.quantity;
     });
 
     return habsList;

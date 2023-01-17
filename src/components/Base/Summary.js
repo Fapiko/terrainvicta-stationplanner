@@ -29,7 +29,11 @@ const Summary = (props) => {
     let volatiles      = 0;
     let metals         = 0;
     props.habs.forEach(hab => {
-        for (let i = 0; i < hab.quantity; i++) {
+        let quantity = hab.quantity;
+        if (quantity === undefined) {
+            quantity = 1;
+        }
+        for (let i = 0; i < quantity; i++) {
             crew += hab.crew;
 
             if (props.defensesPowered || hab.spaceCombatValue === 0) {
